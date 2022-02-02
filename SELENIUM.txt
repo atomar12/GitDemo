@@ -1,0 +1,386 @@
+----------------------------------------------------------------Locators--------------------------------------------------------------
+ID, Xpath, CSS locator,name,  Class name, Tag Name, Link Text, Partial link text
+
+<input type="text" placeholder="Username" id="inputUsername" value="">
+
+Tag Name--> input
+Attributename--> type,placeholder,id,value
+
+To find locator using text use this--> //button[text()='ADD TO CART']
+To find locaotar using href attribute--> a[href*="sign_in"]
+
+CSS Selector--> tagname.classname Ex-- input.classname
+Example of regular expression in creating CSS selector--> input[id*='SeniorCitizenDiscount']   --> just put * after id
+We can also create css selector using this--> .ui-state-default.ui-state-highlight.ui-state-active
+Xpath--> //*[@id="container"]/div[2]/form/button
+Partial Link Text--> input[type='pass']
+
+Syntax to find the locator in chromeconsole-->  $x('//input[@placeholder="Name"]')
+
+
+----------------------------------------------DROPDOWN------------------------------>>>>    bhul gya
+1-- Static DROPDOWNS
+It have select tag in html and are limited in size
+
+2-- Dynamic Dropdowns using indexes
+It loads on the basic of first dropdown example spicejet from and departure dropdown are dynamic. If we try to fill value delhi in from dropdown the second dropdown value will prompt.
+If client says not to use indexing in finding elements then use parent and child relationship of finding xpath. Ex--> (xpath of parent) (xpath of child)--> driver.findElement(By.xpath("//div[@id='glsctl00_mainContent_ddl_destinationStation1_CTNR'] //a[@value='MAA']")).click(); . No need to use indexing
+
+3- Auto Suggestive Dropdowns
+Website--> google.com
+search --> Selenium
+use this selector to find list of webelements--> //*[@role='listbox']/li
+List <WebElement> listofelements= driver.findElements(By.xpath("//*[@role='listbox']/li"));
+
+4-- Handle Calender
+-- DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+   LocalDateTime now = LocalDateTime.now();  
+   System.out.println(dtf.format(now)); 
+
+
+-----------------------------------------CHECKBOXES-----------------------------------------
+
+1--> driver.findElement(By.cssSelector("input[id*='SeniorCitizenDiscount']")).click();
+System.out.println(driver.findElement(By.cssSelector("input[id*='SeniorCitizenDiscount']")).isSelected());  This will give true or false
+How to count number of checkbox in a page-->  Find out a common locator using any common tag or attribute of all check boxes. Example--> input[type='checkbox']
+Example--> int checkboxcount= driver.findElements(By.cssSelector("input[type='checkbox']")).size();
+
+----------------------------------------Alerts----------------------------------------------
+There are 2 types of alerts-
+1- WHich has only OK option  --> CODE to handle--> driver.switchTo().alert().accept();
+2- Second one which has OK or Cancel button-->    driver.switchTo().alert().dismiss();
+
+
+---------------------------------------TestNG Framework-----------------------------------------------
+1- Assertion
+Common methods--> Asserttrue(), assertfalse(), assertequals(actual,expected)
+
+
+----------------------------------------WAITS------------------------------------------------------
+1- Implicit wait-->driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+Advantages- Code is clean and applicable at global level
+Disadvanteges--> Applicable for all test cases, performance issue , we can not validate some scenarios of performance then it is not recomdable
+
+2- Explicit Wait--> WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); 
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span.promoInfo")));
+Advantages--> Can be used only in some specific element without touching other elements at all,  
+Disadvantages--> Need to create object of WebDriverWait class to access methods
+
+3- Fluent Wait--> It comes under category of explicit wait only.Find the webdriver element repeteadley at regular interval of time until the timeout or object was found 
+Real time example--> On a E-commerce website, messages on a loading icon are coming automatically after fixed interval of time like- Card is accepted, Order is beign processed, order processed successfully 
+
+
+
+---------------------------------------ACTIONS--------------------------------------------------------------
+Actions Class--> Helps in controlling mouse Over actions on a webpage like right click, drag and drop, double click etc
+````How to mouse over to any webelement on a page?? 
+ANS--> Actions a=new Actions(driver);
+a.moveToElement(driver.findElement(By.cssSelector("span[class='nav-line-2 ']"))).build().perform();
+
+How to perform right click--> Using contextClick()
+How to type text in CAPS in text field--> a.moveToElement(driver.findElement(By.xpath("//input[@id='twotabsearchtextbox']"))).click().keyDown(Keys.SHIFT).sendKeys("hello").doubleClick().build().perform();
+
+How to do double click?
+ANs- doubleClick()
+
+
+-------------------------------------WINDOW HANDLE----------------------------------------------------------------
+driver.findElement(By.cssSelector("a.blinkingText")).click();
+		Set<String> windows = driver.getWindowHandles();
+		Iterator<String> it = windows.iterator();
+		String parentid = it.next();
+		String childid = it.next();
+		driver.switchTo().window(childid);
+
+
+-------------------------------------FRAMES------------------------------------------------------------------------
+Frames are components or containers that are hosted on webpages. 
+
+
+
+
+
+
+
+
+------------------------------------------------------------------TESTNG------------------------------------------------
+
+Test NG(Next Generation)--> It is a unit testing framework that provides flexibility to control our test cases by making xml files of different different modules.
+Basic features-->
+1- Prioritize Test cases
+2- Modularize Test Cases depends on requirement
+3- Can exclude test cases from XML file using --> 
+<classes>
+<class name="test.day3">
+<methods>
+<exclude name="Mobile Login in Car"/>
+</methods>
+
+4- Can exclude multipletest cases using regular expression. Helps to handle multiple test cases in a single go
+<exclude name="Mobile.*"/>
+
+5- Parallel Execution-->  <suite name="Suite" parallel="tests">
+
+
+Test NG Annotations
+1- @BeforeTest(Applicable for specific Test Folder in XML file/executes only before tag given in testng.xml file.)--> It will execute first even before the data present in an XML file. Example--> If i want to delete some data from DB or open browser or wants to start Appium server then we can use this annotations. 	
+
+2- @AfterTest(Applicable for specific Test Folder in XML file)--> It will execute in the last in a particular folder or class only. Example--> wants to delete cookies
+
+3- @BeforeSuite-->It will execute first before anything Ex--> Global environment like URL, credentials, Headers, API key etc
+
+4- @AfterSuite--> It will execute last 
+
+5- @BeforeMethod--> It will execute after every test case method. If there are 4 test cases in a class then it will execute 4 times. Ex- 
+
+6- @AfterMethod-->
+
+7- @BeforeClass--> Before executing any method in a class
+
+8- @AfterClass--> AFter executing a class
+
+
+
+Test NG Annotations scope
+BeforeSuite
+'   BeforeTest
+'   '   BeforeClass
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod3
+'   '   '   AfterMethod
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod4
+'   '   '   AfterMethod
+'   '   AfterClass
+'   AfterTest
+'   BeforeTest
+'   '   BeforeClass
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod1
+'   '   '   AfterMethod
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod2
+'   '   '   AfterMethod
+'   '   AfterClass
+'   '   BeforeClass
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod3
+'   '   '   AfterMethod
+'   '   '   BeforeMethod
+'   '   '   '   myTestMethod4
+'   '   '   AfterMethod
+'   '   AfterClass
+'   AfterTest
+AfterSuite
+
+
+Test NG Group--> @Test(groups={"SmokeTest Cases"})
+Test NG Depends--> @Test(dependsOnMethod{"Test case1"})
+Test NG Enabled--> @Test(enabled=false)
+Test NG Timeouts--> @Test(Timeout=4000)
+PARAMETERIZATION --> Put variable data in XML file and put this above test method--> @Parameters({URL})
+@DataProvider()
+Test NG Listners--> ITestListner is an interface which implements Test NG Listners.
+Parralel TestNG --> Add this ti XML file- parallel="tests" thread-count="2"
+Test Output --> Refresh the page--> 
+
+
+--------------------------------------------------------MAVEN------------------------------------------
+Build Management Tool
+-- Central Repository to get dependencies
+-- Maintaining common structure/skeleton accross the organization
+-- Can be integrated with Jenkins
+-- Plugins for Test Framework Execution
+
+Groupid--> Unique Name of the project like Selenium, Rest assured
+Artifactid--> as a JAR name or sub project name
+Common template--> quickstart 1.1
+
+CMD Command--> mvn clean
+mvn compile  -- to check the syntax error
+mvn test
+
+How to run TESTNG XML file through MAVEN?? --> 
+
+
+
+-------------------------------------------------------JENKINS----------------------------------------
+For Automating build,test and deploythe softwares
+
+java -jar jenkins.war -httpPort=8080
+
+Password- 4b4607060f444af2a1414ae47e0dc337
+
+If it got stucked during installation then try this--> http://localhost:8080/safeRestart
+
+Set JAVA anfd MAVEN path in global tool configuration
+
+
+
+
+-------------------------------------------------Extent Report---------------------------------------
+Consolidate report using bar chart, maps, pie chart
+- Consists of 2 classess-->  
+ExtentSpartReporter--> Used to configure path for report, can set name of report, heading of report etc
+ExtentReports--> used to actually create report for test cases.
+
+
+-------------------------------------------------Log4j-----------------------------------------------
+Reliable, fast logging framework 
+Usage--> for logs generation and error finding
+
+
+
+*******When to Use log. Error, debug and info methods in Selenium test cases*****************************
+
+Use log. Error() to log when elements are not displayed in the page or if any validations fail
+
+Use Log. Debug()
+
+When each Selenium action is performed like click, SendKeys, getText()
+
+Use log.info()
+
+When operation is successfully completed ex: After loading page, or after any successful validations
+
+It’s just counterpart to log. Error()
+
+
+
+-------------------------------------------Page Object Model Pattern--------------------------------------------
+Effective way for reusbility
+
+--Easy to maintain
+--Reduce or eliminate duplicay
+--Easy Readability of scripts
+--Re-usability of code
+--Reliability
+
+Create object of all a single page will be created in a single class and locators will be made using methods
+Initialize the Page Factory.initElements(driver,this)
+
+Page Object Factory --> Easy way to write locators using @FindBy annotations
+@FindBy(xpath="")
+WebElement username;
+
+@FindBy(xpath="")
+WebElement password
+
+
+-------------------------------------------GIT----------------------------------------------------------------
+
+Version Control System
+
+Basic GitCommands--> 
+
+
+
+
+
+
+
+
+
+---------------------------------------Important Notes--------------------------------------------------
+-- If we can't able to find out unique elements on a page then using indexing like this--> //input[@type='text'][2]    or using CSS --> input[type='text']:nth-child(2)
+-- If there are not attribute on a webpage HTML then we can find the webelement using only tagname like this-->  //form/h2/input/[3]  (Parent tag name/child tag name)
+-- If we want to extract any word from a string then simply split the string into char array then pick word using index number of array
+-- / means absolute xpath, it start searching from root but // means relative xpath because it start searching from the child root
+-- difference between driver.get("URL");--> It contains inbuilt syncronisation by allowing all the components to open on a webpage and driver.navigate().to(URL); --> But it does not allow to fully load the components, it will navigate to further steps wven if basic image or html of the page is loaded 
+-- If there are 2 same webelement present on page then use indexing to tell webdriver to click or select second element in the list. Example-->  (//a[@value='Maa']).[2]
+-- If we have to find out whether the button is enable or disable and if its enable after a click then we have to find the difference before and after click because there should be some difference in the HTML of the element. Example--> driver.findElement(By.xpath("//div[contains(text(),'Select Date')]")).getAttribute("style")
+-- isDisplayed() is the method to check whether element is presence on a webpage
+-- 
+---
+
+
+-----------------------------------------Common Exception of SE---------------------------------------
+1- Stale element--> caused by 2 reason--> 1- referenced element has been deleted completely, 2- Or referenced element is no longer attach to the DOM(Document Object Model). Solution--> Lazy Initialization using POM. initElements() method which loads the element but it won’t initialize elements. It takes teh latest address of locator
+2- Elementclickinterceptedexception --> When app is in changing state then this exception comes, use explicit wait for few seconds to complete load the page
+3- Element not visible 
+4- Invalid Selector exceptions
+5- Element not interactable
+6- AssertionError
+7- Null Pointer Exception --> WHenever driver reference is create but there is no life assign to the variable (by creating object)
+8- Array Index Out of Bound Exception
+
+
+--------------------------------------------Questions--------------------------------------
+1-- DIfference between findelement and findelements?
+Since findElement() returns a single element so the return type of this method is WebElement while findElements() returns a List of WebElements so the return type of this method is a List<WebElement>. WebElement is an interface that represents an HTML element.
+
+2-- How to get number of count of links available on page--> driver.findElements(By.tagName("a")).size();
+
+3-- How to find links available on a page? --> Using By.tagname("a")  --> All links are present inside tagname a only
+
+4- How to click on back and forward button of a website? --> driver.navigate().back();    driver.navigate().forward();
+
+5- WHere you use Interface--> In Testng Listners, using ITestListener interface
+
+6- Is SE thread safe? --> no
+
+7- How to implement thread safe in framework--> using threadlocal class
+
+8- How to retrieve date ? a--> Using Date class in Java,  Date d=new Date();
+                                                         d.toString();
+                          b--> Using SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+                               sdf.format(d);
+                          c--> Using Calender class, it provides more information of date
+                               Calender cal=Calender.getInstance();
+                               sdf.format(cal.getTime());
+
+
+
+
+
+
+-----------------------------------------ECLIPSE IDE TIPS-------------------------------------------
+
+1-- Auto Format --> ctrl+shft+F
+2-- Always make variable using camel case--> rowCount, cellCount
+3-- 
+
+
+-----------------------------------------------IMP scenarios to remember-----------------------------------
+
+1- How to verify page title for all the tabs present on a browser--> 
+
+
+
+Current status-
+selenium-- section 11
+
+Framework design technology-
+1- TestNG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+JAVA as a programming language
+Xpath for finding locators on a Webpage, Waits like implicit, explicit, fluent
+Framework design using OOPS concepts like Inheritance, polymorphism, abstraction etc
+Worked on Data Drivern Framework in which we have to fetch data from Excel and store in a Hashset and then provide data to the test cases using TESTNG data provider
+Collections concept like List, Queue, Set, CLasses like Array List, Linked List, Hashset
+Fetching data from dropdowns, handling checkboxes, radio buttons
+Maven for automate dependencies
+Test NG for controlling and execution of test cases , for Report generation, for grouping of test cases, @befire suite, after suite, befire test, after test, beforeclass, afterclass, beforemethod, aftermethod
+Git for raising PR
+
+JAVA concepts
+
+
+
